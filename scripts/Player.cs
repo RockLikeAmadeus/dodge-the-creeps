@@ -3,6 +3,14 @@ using System;
 
 public partial class Player : Area2D
 {
+	#region Signals
+	/// <summary>
+	/// Some test description
+	/// </summary>
+	[Signal]
+	public delegate void HitEventHandler();
+	#endregion
+
 	#region Public Properties
 	[Export]
 	public int Speed { get; set; } = 400; // How fast the player will move (pixels/sec).
@@ -18,6 +26,7 @@ public partial class Player : Area2D
 	public override void _Ready()
 	{
 		ScreenSize = GetViewportRect().Size;
+		Hide();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,7 +37,26 @@ public partial class Player : Area2D
 		SetAnimationBasedOnCurrentVelocity();
 	}
 
+	public void Start(Vector2 position)
+	{
+			Position = position;
+			Show();
+			GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
+	}
+
 	#region Private Methods
+
+	#region Signal Handlers
+	// We also specified this function name in PascalCase in the editor's connection window.
+	private void OnBodyEntered(Node2D body)
+	{
+			Hide(); // Player disappears after being hit.
+			EmitSignal(SignalName.Hit);
+			// Must be deferred as we can't change physics properties on a physics callback.
+			GetNode<CollisionShape2D>("CollisionShape2D")
+				.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+	}
+	#endregion
 
 	private void SetVelocityAndSpriteBasedOnPlayerInput(double delta) 
 	{
