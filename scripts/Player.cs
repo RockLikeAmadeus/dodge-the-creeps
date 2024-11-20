@@ -11,6 +11,7 @@ public partial class Player : Area2D
 	#endregion
 	#region Private Properties
 	private Vector2 _velocity;
+	private AnimatedSprite2D _animatedSprite2D;
 	#endregion
 
 	// Called when the node enters the scene tree for the first time.
@@ -23,7 +24,8 @@ public partial class Player : Area2D
 	public override void _Process(double delta)
 	{
 		SetVelocityAndSpriteBasedOnPlayerInput(delta);
-		SetPositionBasedOnCurrentVelocity(delta);		
+		SetPositionBasedOnCurrentVelocity(delta);
+		SetAnimationBasedOnCurrentVelocity();
 	}
 
 	#region Private Methods
@@ -32,16 +34,16 @@ public partial class Player : Area2D
 	{
 		SetVelocityDirectionBasedOnPlayerInput();
 
-		var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		_animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 
 		if (_velocity.Length() > 0)
 		{
 			_velocity = _velocity.Normalized() * Speed;
-			animatedSprite2D.Play();
+			_animatedSprite2D.Play();
 		}
 		else
 		{
-			animatedSprite2D.Stop();
+			_animatedSprite2D.Stop();
 		}
 	}
 
@@ -78,6 +80,21 @@ public partial class Player : Area2D
 			y: Mathf.Clamp(Position.Y, 0, ScreenSize.Y)
 		);
 	}
+
+	private void SetAnimationBasedOnCurrentVelocity()
+	{
+		if (_velocity.X != 0)
+		{
+				_animatedSprite2D.Animation = "walk";
+				_animatedSprite2D.FlipV = false;
+				_animatedSprite2D.FlipH = _velocity.X < 0;
+		}
+		else if (_velocity.Y != 0)
+		{
+				_animatedSprite2D.Animation = "up";
+				_animatedSprite2D.FlipV = _velocity.Y > 0;
+		}
+			}
 
 	#endregion
 }
