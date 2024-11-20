@@ -3,12 +3,15 @@ using System;
 
 public partial class Player : Area2D
 {
+	#region Public Properties
 	[Export]
 	public int Speed { get; set; } = 400; // How fast the player will move (pixels/sec).
 	
 	public Vector2 ScreenSize; // Size of the game window.
-
+	#endregion
+	#region Private Properties
 	private Vector2 _velocity;
+	#endregion
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -22,6 +25,8 @@ public partial class Player : Area2D
 		SetVelocityAndSpriteBasedOnPlayerInput(delta);
 		SetPositionBasedOnCurrentVelocity(delta);		
 	}
+
+	#region Private Methods
 
 	private void SetVelocityAndSpriteBasedOnPlayerInput(double delta) 
 	{
@@ -73,4 +78,6 @@ public partial class Player : Area2D
 			y: Mathf.Clamp(Position.Y, 0, ScreenSize.Y)
 		);
 	}
+
+	#endregion
 }
