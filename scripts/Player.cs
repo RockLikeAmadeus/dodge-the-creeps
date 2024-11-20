@@ -25,6 +25,23 @@ public partial class Player : Area2D
 
 	private void SetVelocityAndSpriteBasedOnPlayerInput(double delta) 
 	{
+		SetVelocityDirectionBasedOnPlayerInput();
+
+		var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+
+		if (_velocity.Length() > 0)
+		{
+			_velocity = _velocity.Normalized() * Speed;
+			animatedSprite2D.Play();
+		}
+		else
+		{
+			animatedSprite2D.Stop();
+		}
+	}
+
+	private void SetVelocityDirectionBasedOnPlayerInput()
+	{
 		_velocity = Vector2.Zero; // The player's movement vector.
 
 		if (Input.IsActionPressed("move_right"))
@@ -45,18 +62,6 @@ public partial class Player : Area2D
 		if (Input.IsActionPressed("move_up"))
 		{
 			_velocity.Y -= 1;
-		}
-
-		var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-
-		if (_velocity.Length() > 0)
-		{
-			_velocity = _velocity.Normalized() * Speed;
-			animatedSprite2D.Play();
-		}
-		else
-		{
-			animatedSprite2D.Stop();
 		}
 	}
 
