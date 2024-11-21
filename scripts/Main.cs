@@ -11,7 +11,7 @@ public partial class Main : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		NewGame();
+		//NewGame();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -23,11 +23,16 @@ public partial class Main : Node
 	{
 		GetNode<Timer>("MobTimer").Stop();
 		GetNode<Timer>("ScoreTimer").Stop();
+		GetNode<HUD>("HUD").ShowGameOver();
 	}
 
 	public void NewGame()
 	{
 		_score = 0;
+		
+		var hud = GetNode<HUD>("HUD");
+		hud.UpdateScore(_score);
+		hud.ShowMessage("Get Ready!");
 
 		var player = GetNode<Player>("Player");
 		var startPosition = GetNode<Marker2D>("StartPosition");
@@ -48,6 +53,7 @@ public partial class Main : Node
 	private void OnScoreTimerTimeout()
 	{
 		_score++;
+		GetNode<HUD>("HUD").UpdateScore(_score);
 	}
 	// We also specified this function name in PascalCase in the editor's connection window.
 	private void OnMobTimerTimeout()
