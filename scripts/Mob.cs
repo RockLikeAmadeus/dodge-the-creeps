@@ -16,6 +16,12 @@ public partial class Mob : RigidBody2D
 	{
 	}
 
+	// We also specified this function name in PascalCase in the editor's connection window.
+	private void OnVisibleOnScreenNotifier2DScreenExited()
+	{
+			QueueFree();
+	}
+
 	private void SetUpAnimatedSprites()
 	{
 		_animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
